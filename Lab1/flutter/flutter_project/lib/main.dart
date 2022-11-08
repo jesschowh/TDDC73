@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'TDDC73 Lab 1 :)'),
+      home: const MyHomePage(title: 'TDDC73 Lab 1 :)'),
     );
   }
 }
@@ -36,81 +38,105 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                // replace with image later
-                height: 150,
-                width: 150,
-                decoration: BoxDecoration(
-                    color: Colors.pink,
-                    borderRadius: BorderRadius.circular(100)),
+                  // replace with image later
+                  height: 150,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: Colors.pink,
+                      borderRadius: BorderRadius.circular(100),
+                      image: const DecorationImage(
+                          image: NetworkImage(
+                              "https://petapixel.com/assets/uploads/2022/07/DALLEcopy.jpg"),
+                          fit: BoxFit.cover))),
+              const SizedBox(
+                height: 40,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextButton(
                     style: TextButton.styleFrom(
-                      primary: Colors.black, // Text Color
-                      backgroundColor: Color(0xffc7c7c7),
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xffc7c7c7),
                     ),
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'BUTTON',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                  ),
+                  const SizedBox(
+                    width: 40,
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
-                      primary: Colors.black, // Text Color
-                      backgroundColor: Color(0xffc7c7c7),
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xffc7c7c7),
                     ),
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'BUTTON',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.black, // Text Color
-                      backgroundColor: Color(0xffc7c7c7),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      'BUTTON',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.black, // Text Color
-                      backgroundColor: Color(0xffc7c7c7),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      'BUTTON',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+              const SizedBox(
+                height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xffc7c7c7),
+                    ),
+                    onPressed: () {},
+                    child: const Text(
+                      'BUTTON',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 40,
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xffc7c7c7),
+                    ),
+                    onPressed: () {},
+                    child: const Text(
+                      'BUTTON',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const <Widget>[
                   Text(
                     'Email',
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(
+                    width: 40,
+                  ),
                   // text input here, comment out of not working ttyp
-                  /*               TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Enter your username',
-            ),
-          ),*/
+                  SizedBox(
+                    width: 200,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: 'Enter email here..',
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
