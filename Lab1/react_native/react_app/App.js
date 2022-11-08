@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   textRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     marginTop: 30,
     width: 400,
     paddingLeft: 20,

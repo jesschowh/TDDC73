@@ -131,9 +131,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(
                     width: 200,
                     child: TextField(
+                      cursorColor: Colors.pink,
                       decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                          color: Colors.pink,
+                        )),
                         labelText: 'Enter email here..',
+                        labelStyle: TextStyle(color: Colors.black),
                       ),
                     ),
                   ),
