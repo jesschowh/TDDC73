@@ -35,15 +35,15 @@ class _CardFormState extends State<CardForm> {
   final List<String> months = <String>[
     for (var i = 1; i <= 12; i++) i.toString().padLeft(2, '0')
   ];
-  final List<String> days = <String>[
-    for (var i = 1; i <= 31; i++) i.toString().padLeft(2, '0')
+  final List<String> year = <String>[
+    for (var i = 2022; i <= 2035; i++) i.toString().padLeft(2, '0')
   ];
 
-  var cardHolder;
-  String cardNumber = "heeeej";
   var cardImg;
-  var cardMonth;
-  var cardDay;
+  String cardHolder = "Firstname Lastname";
+  String cardNumber = "XXXX XXXX XXXX XXXX";
+  String cardMonth = "MM";
+  String cardYear = "YY";
   var carCVV;
   var cardType;
 
@@ -59,6 +59,9 @@ class _CardFormState extends State<CardForm> {
               padding: const EdgeInsets.all(10.0),
               child: Card(
                 number: cardNumber,
+                holder: cardHolder,
+                expireYear: cardYear,
+                expireMonth: cardMonth,
               ),
             ),
             Padding(
@@ -80,14 +83,24 @@ class _CardFormState extends State<CardForm> {
                 }),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Card Holders",
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   border: OutlineInputBorder(),
                 ),
+                onChanged: ((value) {
+                  setState(() {
+                    cardHolder = value;
+                  });
+                }),
+                // onChanged: ((value) {
+                //   setState(() {
+                //     cardHolder = value;
+                //   });
+                // }),
               ),
             ),
             Row(
@@ -105,13 +118,23 @@ class _CardFormState extends State<CardForm> {
                         Dropdown(
                           drowDownList: months,
                           textHint: "Month",
+                          callback: (value) {
+                            setState(() {
+                              cardMonth = value;
+                            });
+                          },
                         ),
                         const SizedBox(
                           width: 25,
                         ),
                         Dropdown(
-                          drowDownList: days,
-                          textHint: "Days",
+                          drowDownList: year,
+                          textHint: "Year",
+                          callback: (value) {
+                            setState(() {
+                              cardYear = value;
+                            });
+                          },
                         ),
                       ],
                     ),
@@ -143,16 +166,25 @@ class _CardFormState extends State<CardForm> {
   }
 }
 
-Text getCardText() {
-  return const Text(
-    'Hello World',
-    style: TextStyle(color: Colors.deepPurpleAccent),
+Text getCardText(input) {
+  return Text(
+    input,
+    style: const TextStyle(color: Colors.deepPurpleAccent),
   );
 }
 
+// ignore: must_be_immutable
 class Card extends StatefulWidget {
-  Card({super.key, required this.number});
+  Card(
+      {super.key,
+      required this.number,
+      required this.holder,
+      required this.expireMonth,
+      required this.expireYear});
   String number;
+  String holder;
+  String expireMonth;
+  String expireYear;
   var imgRatio = 675 / 435;
   @override
   State<StatefulWidget> createState() => _CardState();
@@ -181,10 +213,12 @@ class _CardState extends State<Card> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset('images/chip.png'),
                   SizedBox(
                     height: 50,
-                    width: 50,
+                    child: Image.asset('images/chip.png'),
+                  ),
+                  SizedBox(
+                    height: 50,
                     child: Image.asset('images/mastercard.png'),
                   ),
                 ],
@@ -198,13 +232,14 @@ class _CardState extends State<Card> {
                   Column(
                     children: <Widget>[
                       const Text("Card Holder"),
-                      Text(widget.number),
+                      // Text(widget.number),
+                      getCardText("Tilda Hylander"),
                     ],
                   ),
                   Column(
                     children: [
                       const Text("Expires"),
-                      Text(widget.number),
+                      Text("${widget.expireMonth}/${widget.expireYear}"),
                     ],
                   ),
                 ],
@@ -214,55 +249,20 @@ class _CardState extends State<Card> {
         ),
       ),
     );
-
-    // Stack(
-    //   children: <Widget>[
-    //     Image.asset('images/19.jpeg'),
-    //     Column(
-    //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //       children: <Widget>[
-    //         // chip and card type
-    //         Row(
-    //           children: [
-    //             Image.asset('images/chip.png'),
-    //             SizedBox(
-    //               height: 50,
-    //               width: 50,
-    //               child: Image.asset('images/mastercard.png'),
-    //             ),
-    //           ],
-    //         ),
-    //         // card number
-    //         Text(widget.number),
-    //         // card holder and expiry date
-    //         Row(
-    //           children: [
-    //             Column(
-    //               children: <Widget>[
-    //                 const Text("Card Holder"),
-    //                 Text(widget.number),
-    //               ],
-    //             ),
-    //             Column(
-    //               children: [
-    //                 const Text("Expires"),
-    //                 Text(widget.number),
-    //               ],
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //   ],
-    // );
   }
 }
 
 // ignore: must_be_immutable
 class Dropdown extends StatefulWidget {
-  Dropdown({super.key, required this.drowDownList, required this.textHint});
+  Dropdown(
+      {super.key,
+      required this.drowDownList,
+      required this.textHint,
+      required this.callback});
+
   final List<String> drowDownList;
   final String textHint;
+  Function callback;
   String? selectedValue;
 
   @override
@@ -287,6 +287,7 @@ class _DropDownState extends State<Dropdown> {
         setState(() {
           widget.selectedValue = value!;
         });
+        widget.callback(value);
       },
       items: widget.drowDownList.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
