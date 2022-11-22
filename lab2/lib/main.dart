@@ -39,7 +39,7 @@ class _CardFormState extends State<CardForm> {
     for (var i = 2022; i <= 2035; i++) i.toString().padLeft(2, '0')
   ];
 
-  var cardImg;
+  String cardSampleString = "XXXX XXXX XXXX XXXX";
   String cardHolder = "Firstname Lastname";
   String cardNumber = "XXXX XXXX XXXX XXXX";
   String cardMonth = "MM";
@@ -66,7 +66,7 @@ class _CardFormState extends State<CardForm> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: TextField(
+              child: TextFormField(
                 decoration: const InputDecoration(
                   labelText: "Card Number",
                   floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -74,11 +74,12 @@ class _CardFormState extends State<CardForm> {
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly,
+                  CardInputFormatter(sample: cardSampleString, separator: " "),
                 ],
                 onChanged: ((value) {
                   setState(() {
-                    cardNumber = value;
+                    cardNumber =
+                        value + cardSampleString.substring(value.length);
                   });
                 }),
               ),
@@ -96,11 +97,6 @@ class _CardFormState extends State<CardForm> {
                     cardHolder = value;
                   });
                 }),
-                // onChanged: ((value) {
-                //   setState(() {
-                //     cardHolder = value;
-                //   });
-                // }),
               ),
             ),
             Row(
@@ -173,6 +169,84 @@ Text getCardText(input) {
   );
 }
 
+String getCardType(input) {
+  String res;
+
+  if (RegExp('^4').hasMatch(input)) {
+    res = 'visa';
+  } else if (RegExp("^(34|37)").hasMatch(input)) {
+    res = 'amex';
+  } else if (RegExp("^5[1-5]").hasMatch(input)) {
+    res = 'mastercard';
+  } else if (RegExp("^6011").hasMatch(input)) {
+    res = 'discover';
+  } else if (RegExp("^9792").hasMatch(input)) {
+    res = 'troy';
+  } else {
+    res = 'jcb';
+  }
+
+  // if (input) int firstDigit;
+  // String res = '';
+  // int secondDigit = 4;
+  // int fourDigits = 4444;
+  // if (input.length > 0) {
+  //   firstDigit = int.parse(input[0]);
+
+  //   // int
+  //   // int secondDigit = int.parse(input[1]);
+  //   // int fourDigits = int.parse(input.substring(0, 4));
+
+  //   // if (input.length > 4) {
+
+  //   // }
+
+  //   switch (firstDigit) {
+  //     case 4:
+  //       res = 'visa';
+  //       break;
+  //     case 5:
+  //       {
+  //         if (secondDigit >= 1 && secondDigit <= 5) {
+  //           res = 'mastercard';
+  //         }
+  //       }
+  //       break;
+  //     case 3:
+  //       {
+  //         if (secondDigit == 4 || secondDigit == 7) {
+  //           res = 'amex';
+  //         } else if (secondDigit == 0 || secondDigit == 6 || secondDigit == 8) {
+  //           res = 'dinersclub';
+  //         } else if (fourDigits >= 3528 && fourDigits <= 3589) {
+  //           res = 'jcb';
+  //         }
+  //       }
+  //       break;
+  //     case 6:
+  //       {
+  //         if (fourDigits == 6011) {
+  //           res = 'discover';
+  //         } else if (secondDigit == 2) {
+  //           res = 'unionpay';
+  //         }
+  //       }
+  //       break;
+  //     case 9:
+  //       {
+  //         if (fourDigits == 9792) {
+  //           res = 'troy';
+  //         }
+  //       }
+  //       break;
+  //     default:
+  //       res = 'visa';
+  //       break;
+  //   }
+  // }
+  return 'images/$res.png';
+}
+
 // ignore: must_be_immutable
 class Card extends StatefulWidget {
   Card(
@@ -219,7 +293,8 @@ class _CardState extends State<Card> {
                   ),
                   SizedBox(
                     height: 50,
-                    child: Image.asset('images/mastercard.png'),
+                    // child: Image.asset('images/mastercard.png'),
+                    child: Image.asset(getCardType(widget.number)),
                   ),
                 ],
               ),
@@ -232,8 +307,7 @@ class _CardState extends State<Card> {
                   Column(
                     children: <Widget>[
                       const Text("Card Holder"),
-                      // Text(widget.number),
-                      getCardText("Tilda Hylander"),
+                      getCardText(widget.holder),
                     ],
                   ),
                   Column(
@@ -297,5 +371,41 @@ class _DropDownState extends State<Dropdown> {
       }).toList(),
       menuMaxHeight: 400,
     );
+  }
+}
+
+class CardInputFormatter extends TextInputFormatter {
+  final String sample;
+  final String separator;
+
+  CardInputFormatter({
+    required this.sample,
+    required this.separator,
+  });
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isNotEmpty &&
+        newValue.text.length > oldValue.text.length) {
+      if (newValue.text.length > sample.length) return oldValue;
+
+      var truncatedText = newValue.text.replaceAll(RegExp(r'(\d)|(\s)'), '');
+      //Remove unwanted characters
+      if (truncatedText.length > 0) return oldValue;
+
+      //Is it time for a new separator?
+      if (newValue.text.length < sample.length &&
+          sample[newValue.text.length - 1] == separator) {
+        return TextEditingValue(
+          text:
+              '${oldValue.text}$separator${newValue.text.substring(newValue.text.length - 1)}',
+          selection: TextSelection.collapsed(
+            offset: newValue.selection.end + 1,
+          ),
+        );
+      }
+    }
+    return newValue;
   }
 }
