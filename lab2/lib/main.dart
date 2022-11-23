@@ -135,7 +135,6 @@ class _HomeState extends State<Home> {
                         Dropdown(
                           drowDownList: months,
                           textHint: cardMonth == "MM" ? "Month" : cardMonth,
-                          // textHint: "Month",
                           callback: (value) {
                             setState(() {
                               cardMonth = value;
@@ -309,7 +308,6 @@ class _CardState extends State<Card> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(
-                      //mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         const Text('CVV'),
@@ -323,7 +321,6 @@ class _CardState extends State<Card> {
                               textAlign: TextAlign.end,
                             ),
                           ),
-                          // width: double.maxFinite,
                         ),
                       ],
                     ),
@@ -344,7 +341,7 @@ class _CardState extends State<Card> {
               )
             :
 
-            // ---- Back Side of Card -----
+            // ---- Front Side of Card -----
             Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
@@ -460,7 +457,7 @@ class CardInputFormatter extends TextInputFormatter {
 
       var truncatedText = newValue.text.replaceAll(RegExp(r'(\d)|(\s)'), '');
       //Remove unwanted characters
-      if (truncatedText.length > 0) return oldValue;
+      if (truncatedText.isNotEmpty) return oldValue;
 
       //Is it time for a new separator?
       if (newValue.text.length < sample.length &&
