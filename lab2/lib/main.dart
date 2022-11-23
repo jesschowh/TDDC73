@@ -109,7 +109,8 @@ class _HomeState extends State<Home> {
                   border: OutlineInputBorder(),
                 ),
                 inputFormatters: <TextInputFormatter>[
-                  LengthLimitingTextInputFormatter(30),
+                  FilteringTextInputFormatter.allow(RegExp(r'([a-zA-Z])|(\s)')),
+                  LengthLimitingTextInputFormatter(25),
                 ],
                 onChanged: ((value) {
                   setState(() {
