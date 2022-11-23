@@ -18,20 +18,20 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Lab2"),
         ),
-        body: const CardForm(),
+        body: const Home(),
       ),
     );
   }
 }
 
-class CardForm extends StatefulWidget {
-  const CardForm({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<CardForm> createState() => _CardFormState();
+  State<Home> createState() => _HomeState();
 }
 
-class _CardFormState extends State<CardForm> {
+class _HomeState extends State<Home> {
   final List<String> months = <String>[
     for (var i = 1; i <= 12; i++) i.toString().padLeft(2, '0')
   ];
@@ -48,8 +48,9 @@ class _CardFormState extends State<CardForm> {
   String cardYear = "YY";
   String cardMask = "#### #### #### ####";
   String cardType = "visa";
+  String cardCVV = "";
 
-  var cardCVV;
+  bool showCardBack = false;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +60,7 @@ class _CardFormState extends State<CardForm> {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            //---- Card ----
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Card(
@@ -67,8 +69,13 @@ class _CardFormState extends State<CardForm> {
                 expireYear: cardYear,
                 expireMonth: cardMonth,
                 type: cardType,
+                flipped: showCardBack,
+                cvv: cardCVV,
               ),
             ),
+
+            // ------- FORM --------
+            // ---- Card Number -----
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: TextFormField(
@@ -91,11 +98,13 @@ class _CardFormState extends State<CardForm> {
                 }),
               ),
             ),
+
+            // ---- Card Holder -----
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: TextField(
                 decoration: const InputDecoration(
-                  labelText: "Card Holders",
+                  labelText: "Card Holder",
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   border: OutlineInputBorder(),
                 ),
@@ -109,9 +118,11 @@ class _CardFormState extends State<CardForm> {
                 }),
               ),
             ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                // ---- Expiration date -----
                 SizedBox(
                   width: 200,
                   child: InputDecorator(
@@ -150,18 +161,35 @@ class _CardFormState extends State<CardForm> {
                 const SizedBox(
                   width: 25,
                 ),
+
+                // ---- CVV -----
                 SizedBox(
                   width: 120,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      labelText: "CVV",
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      border: OutlineInputBorder(),
+                  child: FocusScope(
+                    child: Focus(
+                      onFocusChange: (focus) {
+                        setState(() {
+                          showCardBack = focus;
+                        });
+                      },
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          labelText: "CVV",
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(3),
+                        ],
+                        onChanged: ((value) {
+                          setState(() {
+                            cardCVV = value;
+                          });
+                        }),
+                      ),
                     ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
                   ),
                 ),
               ],
@@ -173,16 +201,38 @@ class _CardFormState extends State<CardForm> {
   }
 }
 
+Text getCardNumberText(input) {
+  return Text(
+    input,
+    style: TextStyle(
+        color: Colors.white,
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+        shadows: [textShadow()]),
+  );
+}
+
 Text getCardText(input) {
   return Text(
     input,
-    style: const TextStyle(color: Colors.deepPurpleAccent),
+    style: TextStyle(
+      color: Colors.white,
+      fontSize: 18,
+      shadows: [textShadow()],
+    ),
+  );
+}
+
+Shadow textShadow() {
+  return Shadow(
+    offset: const Offset(2.0, 2.0), //position of shadow
+    blurRadius: 6.0, //blur intensity of shadow
+    color: Colors.black.withOpacity(0.8), //color of shadow with opacity
   );
 }
 
 String getCardType(input) {
   String res;
-
   if (RegExp('^4').hasMatch(input)) {
     res = 'visa';
   } else if (RegExp("^(34|37)").hasMatch(input)) {
@@ -193,6 +243,12 @@ String getCardType(input) {
     res = 'discover';
   } else if (RegExp("^9792").hasMatch(input)) {
     res = 'troy';
+  } else if (RegExp("^30[0-5]|309|36|38|39").hasMatch(input)) {
+    res = 'dinersclub';
+  } else if (RegExp("^35[28-89]").hasMatch(input)) {
+    res = 'jcb';
+  } else if (RegExp("^62").hasMatch(input)) {
+    res = 'unionpay';
   } else {
     res = 'visa';
   }
@@ -208,12 +264,16 @@ class Card extends StatefulWidget {
       required this.holder,
       required this.expireMonth,
       required this.expireYear,
-      required this.type});
+      required this.type,
+      required this.flipped,
+      required this.cvv});
   String number;
   String holder;
   String expireMonth;
   String expireYear;
   String type;
+  String cvv;
+  bool flipped;
 
   var imgRatio = 675 / 435;
   @override
@@ -233,51 +293,102 @@ class _CardState extends State<Card> {
       child: SizedBox(
         width: 250 * widget.imgRatio,
         height: 250,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              //chip and card type
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
+        child: widget.flipped
+            ?
+            // ---- Back Side of Card -----
+            Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  const SizedBox(
+                    width: double.maxFinite,
                     height: 50,
-                    child: Image.asset('images/chip.png'),
+                    child: DecoratedBox(
+                        decoration:
+                            BoxDecoration(color: Color.fromARGB(195, 0, 0, 0))),
                   ),
-                  SizedBox(
-                    height: 50,
-                    child: Image.asset('images/${widget.type}.png'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        const Text('CVV'),
+                        SizedBox(
+                          width: double.maxFinite,
+                          child: DecoratedBox(
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(195, 227, 227, 227)),
+                            child: Text(
+                              widget.cvv,
+                              textAlign: TextAlign.end,
+                            ),
+                          ),
+                          // width: double.maxFinite,
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-              // card number
-              Text(widget.number),
-              // card holder and expiry date
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text("Card Holder"),
-                      getCardText(widget.holder),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text("Expires"),
-                      Text("${widget.expireMonth}/${widget.expireYear}"),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          child: Image.asset('images/${widget.type}.png'),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               )
-            ],
-          ),
-        ),
+            :
+
+            // ---- Back Side of Card -----
+            Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    //chip and card type
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          child: Image.asset('images/chip.png'),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          child: Image.asset('images/${widget.type}.png'),
+                        ),
+                      ],
+                    ),
+                    getCardNumberText(widget.number),
+                    // card holder and expiry date
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            const Text("Card Holder"),
+                            getCardText(widget.holder.toUpperCase()),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            const Text("Expires"),
+                            getCardText(
+                                "${widget.expireMonth}/${widget.expireYear}"),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
       ),
     );
   }
