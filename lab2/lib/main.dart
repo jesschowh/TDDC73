@@ -39,13 +39,17 @@ class _CardFormState extends State<CardForm> {
     for (var i = 2022; i <= 2035; i++) i.toString().padLeft(2, '0')
   ];
 
-  String cardSampleString = "XXXX XXXX XXXX XXXX";
-  String cardHolder = "Firstname Lastname";
-  String cardNumber = "XXXX XXXX XXXX XXXX";
+  final String amexCardMask = "#### ###### #####";
+  final String otherCardMask = "#### #### #### ####";
+
+  String cardHolder = "Full Name";
+  String cardNumber = "#### #### #### ####";
   String cardMonth = "MM";
   String cardYear = "YY";
-  var carCVV;
-  var cardType;
+  String cardMask = "#### #### #### ####";
+  String cardType = "visa";
+
+  var cardCVV;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +66,7 @@ class _CardFormState extends State<CardForm> {
                 holder: cardHolder,
                 expireYear: cardYear,
                 expireMonth: cardMonth,
+                type: cardType,
               ),
             ),
             Padding(
@@ -74,12 +79,14 @@ class _CardFormState extends State<CardForm> {
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
-                  CardInputFormatter(sample: cardSampleString, separator: " "),
+                  CardInputFormatter(sample: cardMask, separator: " "),
                 ],
                 onChanged: ((value) {
                   setState(() {
-                    cardNumber =
-                        value + cardSampleString.substring(value.length);
+                    cardType = getCardType(value);
+                    cardMask =
+                        cardType == "amex" ? amexCardMask : otherCardMask;
+                    cardNumber = value + cardMask.substring(value.length);
                   });
                 }),
               ),
@@ -92,6 +99,9 @@ class _CardFormState extends State<CardForm> {
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   border: OutlineInputBorder(),
                 ),
+                inputFormatters: <TextInputFormatter>[
+                  LengthLimitingTextInputFormatter(30),
+                ],
                 onChanged: ((value) {
                   setState(() {
                     cardHolder = value;
@@ -113,7 +123,8 @@ class _CardFormState extends State<CardForm> {
                       children: <Widget>[
                         Dropdown(
                           drowDownList: months,
-                          textHint: "Month",
+                          textHint: cardMonth == "MM" ? "Month" : cardMonth,
+                          // textHint: "Month",
                           callback: (value) {
                             setState(() {
                               cardMonth = value;
@@ -125,7 +136,7 @@ class _CardFormState extends State<CardForm> {
                         ),
                         Dropdown(
                           drowDownList: year,
-                          textHint: "Year",
+                          textHint: cardYear == "YY" ? "Year" : cardYear,
                           callback: (value) {
                             setState(() {
                               cardYear = value;
@@ -183,68 +194,10 @@ String getCardType(input) {
   } else if (RegExp("^9792").hasMatch(input)) {
     res = 'troy';
   } else {
-    res = 'jcb';
+    res = 'visa';
   }
 
-  // if (input) int firstDigit;
-  // String res = '';
-  // int secondDigit = 4;
-  // int fourDigits = 4444;
-  // if (input.length > 0) {
-  //   firstDigit = int.parse(input[0]);
-
-  //   // int
-  //   // int secondDigit = int.parse(input[1]);
-  //   // int fourDigits = int.parse(input.substring(0, 4));
-
-  //   // if (input.length > 4) {
-
-  //   // }
-
-  //   switch (firstDigit) {
-  //     case 4:
-  //       res = 'visa';
-  //       break;
-  //     case 5:
-  //       {
-  //         if (secondDigit >= 1 && secondDigit <= 5) {
-  //           res = 'mastercard';
-  //         }
-  //       }
-  //       break;
-  //     case 3:
-  //       {
-  //         if (secondDigit == 4 || secondDigit == 7) {
-  //           res = 'amex';
-  //         } else if (secondDigit == 0 || secondDigit == 6 || secondDigit == 8) {
-  //           res = 'dinersclub';
-  //         } else if (fourDigits >= 3528 && fourDigits <= 3589) {
-  //           res = 'jcb';
-  //         }
-  //       }
-  //       break;
-  //     case 6:
-  //       {
-  //         if (fourDigits == 6011) {
-  //           res = 'discover';
-  //         } else if (secondDigit == 2) {
-  //           res = 'unionpay';
-  //         }
-  //       }
-  //       break;
-  //     case 9:
-  //       {
-  //         if (fourDigits == 9792) {
-  //           res = 'troy';
-  //         }
-  //       }
-  //       break;
-  //     default:
-  //       res = 'visa';
-  //       break;
-  //   }
-  // }
-  return 'images/$res.png';
+  return res;
 }
 
 // ignore: must_be_immutable
@@ -254,11 +207,14 @@ class Card extends StatefulWidget {
       required this.number,
       required this.holder,
       required this.expireMonth,
-      required this.expireYear});
+      required this.expireYear,
+      required this.type});
   String number;
   String holder;
   String expireMonth;
   String expireYear;
+  String type;
+
   var imgRatio = 675 / 435;
   @override
   State<StatefulWidget> createState() => _CardState();
@@ -293,8 +249,7 @@ class _CardState extends State<Card> {
                   ),
                   SizedBox(
                     height: 50,
-                    // child: Image.asset('images/mastercard.png'),
-                    child: Image.asset(getCardType(widget.number)),
+                    child: Image.asset('images/${widget.type}.png'),
                   ),
                 ],
               ),
@@ -305,6 +260,8 @@ class _CardState extends State<Card> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       const Text("Card Holder"),
                       getCardText(widget.holder),
@@ -336,7 +293,7 @@ class Dropdown extends StatefulWidget {
 
   final List<String> drowDownList;
   final String textHint;
-  Function callback;
+  final Function callback;
   String? selectedValue;
 
   @override
@@ -359,9 +316,9 @@ class _DropDownState extends State<Dropdown> {
       onChanged: (String? value) {
         // This is called when the user selects an item.
         setState(() {
+          widget.callback(value);
           widget.selectedValue = value!;
         });
-        widget.callback(value);
       },
       items: widget.drowDownList.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
