@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:lab3/detailedInfo.dart';
 
 import 'local.dart';
 
@@ -116,7 +117,22 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       final repository = repositories[index];
 
-                      return Text(repository['name'] ?? '');
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return DetailedInfo(
+                                  repoName: repository['name'] ?? '');
+                            }),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Text(repository['name'] ?? ''),
+                          ],
+                        ),
+                      );
                     });
               },
             ),
