@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+import 'local.dart';
+
 void main() async {
   await initHiveForFlutter();
 
@@ -9,7 +11,7 @@ void main() async {
   );
 
   final AuthLink authLink = AuthLink(
-    getToken: () async => 'Bearer <YOUR_PERSONAL_ACCESS_TOKEN>',
+    getToken: () async => 'Bearer $TOKEN',
     // OR
     // getToken: () => 'Bearer <YOUR_PERSONAL_ACCESS_TOKEN>',
   );
@@ -56,6 +58,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String readRepositories = """
+  query ReadRepositories(\$nRepositories: Int!) {
+    viewer {
+      repositories(last: \$nRepositories) {
+        nodes {
+          id
+          name
+          viewerHasStarred
+        }
+      }
+    }
+  }
+""";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +80,49 @@ class _HomePageState extends State<HomePage> {
         // the App.build method, and use it to set our appbar title.
         title: const Text("Lab3"),
       ),
-      body: Text("lab3"),
+      body: Column(
+        children: [
+          Expanded(
+            child: Query(
+              options: QueryOptions(
+                document: gql(
+                    readRepositories), // this is the query string you just created
+                variables: const {
+                  'nRepositories': 50,
+                },
+                // pollInterval: const Duration(seconds: 10),
+              ),
+              // Just like in apollo refetch() could be used to manually trigger a refetch
+              // while fetchMore() can be used for pagination purpose
+              builder: (QueryResult result,
+                  {VoidCallback? refetch, FetchMore? fetchMore}) {
+                if (result.hasException) {
+                  return Text(result.exception.toString());
+                }
+
+                if (result.isLoading) {
+                  return const Text('Loading');
+                }
+
+                List? repositories =
+                    result.data?['viewer']?['repositories']?['nodes'];
+
+                if (repositories == null) {
+                  return const Text('No repositories');
+                }
+
+                return ListView.builder(
+                    itemCount: repositories.length,
+                    itemBuilder: (context, index) {
+                      final repository = repositories[index];
+
+                      return Text(repository['name'] ?? '');
+                    });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
