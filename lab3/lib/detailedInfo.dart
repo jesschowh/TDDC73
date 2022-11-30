@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class DetailedInfo extends StatelessWidget {
@@ -52,7 +50,7 @@ class DetailedInfo extends StatelessWidget {
     return Material(
       type: MaterialType.transparency,
       child: Container(
-        color: Color.fromARGB(255, 130, 248, 148),
+        color: const Color.fromARGB(255, 130, 248, 148),
         child: Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -72,8 +70,8 @@ class DetailedInfo extends StatelessWidget {
               Column(children: languages.map((item) => Text(item)).toList()),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Color.fromARGB(255, 255, 255, 255),
-                  backgroundColor: Color.fromARGB(255, 238, 89, 134),
+                  foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+                  backgroundColor: const Color.fromARGB(255, 238, 89, 134),
                 ),
                 onPressed: () {
                   Navigator.pop(context);
