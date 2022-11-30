@@ -23,11 +23,12 @@ class _DropDownState extends State<Dropdown> {
       hint: Text(widget.textHint),
       icon: const Icon(Icons.keyboard_arrow_down),
       elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
+      style: const TextStyle(
+          color: Colors.black), //Color.fromARGB(255, 238, 89, 134)),
       value: widget.selectedValue,
       underline: Container(
         height: 2,
-        color: Colors.deepPurpleAccent,
+        color: const Color.fromARGB(255, 238, 89, 134),
       ),
       onChanged: (String? value) {
         // This is called when the user selects an item.

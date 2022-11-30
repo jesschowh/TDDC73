@@ -17,7 +17,7 @@ class ListItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Container(
-        color: const Color.fromARGB(255, 180, 141, 252),
+        color: const Color.fromARGB(255, 238, 89, 134),
         child: InkWell(
           onTap: () {
             Navigator.push(
@@ -53,7 +53,7 @@ class ListItem extends StatelessWidget {
                           fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Fork counts: ${repository['forkCount'].toString()}",
+                      "Stars: ${repository['stargazerCount'].toString()}",
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.bold),
                     ),

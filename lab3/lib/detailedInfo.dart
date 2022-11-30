@@ -59,10 +59,11 @@ class DetailedInfo extends StatelessWidget {
               setTitle(repoName),
               setText(description),
               setText(link),
+              setText("Created at: ${createdAt.substring(0, 10)}"),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  setText("Created at: ${createdAt.substring(0, 10)}"),
+                  setText("Stars: $numberStars"),
                   setText("Fork count: $forkCount")
                 ],
               ),

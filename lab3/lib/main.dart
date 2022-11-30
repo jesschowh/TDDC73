@@ -42,7 +42,7 @@ class App extends StatelessWidget {
         child: MaterialApp(
           title: 'Lab3',
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            primarySwatch: Colors.pink,
           ),
           home: const HomePage(),
         ));
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Trending repositories based on fork count"),
+        title: const Text("Trending repositories based on stars"),
       ),
       body: Column(
         children: [
@@ -146,9 +146,8 @@ class _HomePageState extends State<HomePage> {
                 variables: {
                   'nRepositories': int.parse(selectedNumber),
                   'queryString':
-                      "sort:forks-desc language: $selectedLanguage created:>$date",
+                      "sort:stars-desc language: $selectedLanguage created:>$date stars:>1000",
                 },
-                // pollInterval: const Duration(seconds: 10),
               ),
               // Just like in apollo refetch() could be used to manually trigger a refetch
               // while fetchMore() can be used for pagination purpose
