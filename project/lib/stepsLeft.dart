@@ -14,7 +14,7 @@ class _StepsLeftState extends State<StepsLeft> {
   Widget build(BuildContext context) {
     StepClass currentStep = widget.allSteps[0];
 
-    return FloatContainer(
+    return OverlayContainer(
       content: Column(
         children: [
           Row(

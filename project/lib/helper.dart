@@ -9,24 +9,28 @@ class StepClass {
   StepClass({required this.title, required this.label, required this.content});
 }
 
-class FloatContainer extends StatefulWidget {
-  const FloatContainer({super.key, required this.content});
+class OverlayContainer extends StatefulWidget {
+  const OverlayContainer({super.key, required this.content});
 
   final Widget content;
 
   @override
-  State<FloatContainer> createState() => _FloatContainerState();
+  State<OverlayContainer> createState() => _OverlayContainerState();
 }
 
-class _FloatContainerState extends State<FloatContainer> {
+class _OverlayContainerState extends State<OverlayContainer> {
   late OverlayEntry overlayEntry;
 
-  void showIndicator() {
+  void showOverlay() {
     overlayEntry = OverlayEntry(builder: (BuildContext context) {
       return ContainerContent(
-          content: widget.content, closeWindow: overlayEntry.remove);
+          content: widget.content, closeWindow: hideOverlay);
     });
     Overlay.of(context)?.insert(overlayEntry);
+  }
+
+  void hideOverlay() {
+    overlayEntry.remove();
   }
 
   @override
@@ -36,12 +40,12 @@ class _FloatContainerState extends State<FloatContainer> {
       height: 50,
       child: TextButton(
         style: ButtonStyle(
-          foregroundColor:
-              MaterialStateProperty.all<Color>(Color.fromARGB(255, 2, 2, 2)),
+          foregroundColor: MaterialStateProperty.all<Color>(
+              const Color.fromARGB(255, 2, 2, 2)),
           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
         ),
-        onPressed: showIndicator,
-        child: Text('Click me'),
+        onPressed: showOverlay,
+        child: const Text('Click me'),
       ),
     );
   }
@@ -70,12 +74,12 @@ class ContainerContent extends StatelessWidget {
                   TextButton(
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all<Color>(
-                          Color.fromARGB(255, 2, 2, 2)),
+                          const Color.fromARGB(255, 2, 2, 2)),
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.blue),
                     ),
                     onPressed: () => closeWindow(),
-                    child: Text('Close window'),
+                    child: const Text('Close window'),
                   ),
                 ],
               ),

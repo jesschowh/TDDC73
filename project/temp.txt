@@ -1,0 +1,12 @@
+Main 
+ - allSteps
+    - StepClass objects
+- widget StepsLeft(allSteps)
+    - OverlayContainer(content)
+        - button --> showOverlay()
+            - ContainerContent
+            - Content
+        - hideOverlay()
+
+stepsleft = content
+modal = popup fönstret 
