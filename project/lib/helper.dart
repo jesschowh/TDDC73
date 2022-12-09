@@ -2,11 +2,10 @@
 import 'package:flutter/material.dart';
 
 class StepClass {
-  String title;
   String label;
   Widget content;
 
-  StepClass({required this.title, required this.label, required this.content});
+  StepClass({required this.label, required this.content});
 }
 
 // Creates circles based on the current step
@@ -63,11 +62,30 @@ class StepItem extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 5),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12),
-        ),
+        setText(label),
       ],
     );
   }
+}
+
+Text setText(String input) {
+  return Text(
+    input,
+    style: const TextStyle(
+        decoration: TextDecoration.none,
+        color: Colors.black,
+        fontSize: 12,
+        fontWeight: FontWeight.normal),
+  );
+}
+
+Text setTitleText(String input) {
+  return Text(
+    input,
+    style: const TextStyle(
+        decoration: TextDecoration.none,
+        color: Colors.black,
+        fontSize: 18,
+        fontWeight: FontWeight.bold),
+  );
 }

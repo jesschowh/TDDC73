@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 
+import 'helper.dart';
+
 class Modal extends StatefulWidget {
-  const Modal({super.key, required this.content, this.showModal = true});
+  Modal(
+      {super.key,
+      required this.content,
+      this.showModal = false,
+      this.timeDelay = false})
+      : assert(
+            !timeDelay && !showModal ||
+                timeDelay && !showModal ||
+                !timeDelay && showModal,
+            "Error: Both timeDelay and showModal can not be true at the same time");
 
   final Widget content;
-  final bool showModal;
+  bool showModal;
+  bool timeDelay;
 
   @override
   State<Modal> createState() => _ModalState();
@@ -21,17 +33,20 @@ class _ModalState extends State<Modal> {
     overlayEntry = OverlayEntry(
       builder: (BuildContext context) {
         return FractionallySizedBox(
+          // Covers the whole screen
           child: Container(
+            // "Smokes" out the background
             color: const Color.fromARGB(150, 0, 0, 0),
             child: FractionallySizedBox(
+              // Sets size of the modal
               widthFactor: 0.8,
               heightFactor: 0.7,
               child: Center(
                 child: Container(
+                  // Sets color of the modal
                   color: Colors.blue.shade50,
                   child: Column(
                     children: [
-                      widget.content,
                       TextButton(
                         style: ButtonStyle(
                           foregroundColor: MaterialStateProperty.all<Color>(
@@ -40,7 +55,12 @@ class _ModalState extends State<Modal> {
                               MaterialStateProperty.all<Color>(Colors.blue),
                         ),
                         onPressed: () => hideOverlay(),
-                        child: const Text('x'),
+                        child: setText('x'),
+                      ),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.8),
+                        child: widget.content,
                       ),
                     ],
                   ),
@@ -54,23 +74,27 @@ class _ModalState extends State<Modal> {
     Overlay.of(context)?.insert(overlayEntry);
   }
 
-  // builds empty contaainer at launch
-  //how can the user specify when to show modal??
+  // builds empty container at launch
   @override
   Widget build(BuildContext context) {
-    print(widget.showModal);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.showModal ? showOverlay() : () {};
+    });
+    print('time delay ${widget.timeDelay}, showModal ${widget.showModal}');
     return Container();
   }
 
-  // Displays the Modal widget after build is finished
   @override
   void initState() {
     super.initState();
-    print("running init state");
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("running addPostFrameCallback");
-      // RendererBinding.instance.addPostFrameCallback((_) {
-      widget.showModal ? showOverlay() : () {};
+      widget.timeDelay
+          ? Future.delayed(const Duration(seconds: 5), () {
+              setState(() {
+                widget.showModal = true;
+              });
+            })
+          : () {};
     });
   }
 }

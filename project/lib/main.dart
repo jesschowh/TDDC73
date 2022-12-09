@@ -35,31 +35,56 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    //bool showWidget = true;
-
     StepClass stepTest = StepClass(
-        title: 'title1',
-        label: 'label1',
-        content: SizedBox(
+      label: 'label1',
+      content: Column(
+        children: [
+          // Container(
+          //   color: Colors.grey,
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(5.0),
+          //     child: Row(
+          //       children: <Widget>[
+          //         Expanded(
+          //           child: setTitleText("title1"),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          SizedBox(
             width: 200,
             height: 200,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [Text('text11'), Text('text12')])));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                setText('text11'),
+                setText('text12'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
     StepClass stepTest2 = StepClass(
-        title: 'title2',
         label: 'label2',
-        content: Row(children: const [
-          Text('hello this iiiis a text :))))) '),
-          Text('text22')
+        content: Row(children: [
+          setText('hello this iiiis a text :))))) '),
+          setText('text22')
         ]));
     StepClass stepTest3 = StepClass(
-        title: 'title3',
         label: 'label3',
-        content: Row(children: const [Text('text31'), Text('text32')]));
+        content: Row(children: [setText('text31'), setText('text32')]));
 
     List<StepClass> allSteps = <StepClass>[stepTest, stepTest2, stepTest3];
     List<StepClass> allStepsEMPTY = <StepClass>[];
+
+    // bool getBool() {
+    //   Future.delayed(const Duration(milliseconds: 500), () {
+    //     showModal = true;
+    //   });
+    //   return showModal;
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -72,13 +97,11 @@ class _HomeState extends State<Home> {
             const SizedBox(
                 child: Text(
                     'Lorem Ipsum är bäs orem Ipsum är helt enkelt dummy text från tryckeri- och sättningsindustrin. Lorem Ipsum har varit branschens vanliga dummytext ända sedan 1500-talet, då en okänd skrivare tog ett pentry av typ och förvrängde det för att göra en typprovbok. Den har överlevt inte bara fem århundraden, utan också språnget till elektronisk sättning, förblir i stort sett oförändrad. Det blev populärt på 1960-talet med lanseringen av Letraset-ark som innehöll Lorem Ipsum-passager, och mer nyligen med programvara för desktop publishing som Aldus PageMaker inklusive versioner av Lorem Ipsum.tkkkkkk kkkkk kkkkkkkkk kkkkkkk kkkkkkk kkkkkk kkkk kkkk kkkkkkk kkkkkkk kkkkkkkkk kkkkkkkk kkkkkkkkk kkkkkkkk kkkkkkkk kkkkk  kkkkk kkkkkkkkk kkkkkkkkkkkkkkkk')),
-            // StepsLeft(
-            //     allSteps: allSteps,
-            //     currentStep: currentStep,
-            //     color: Colors.pink),
-
             Modal(
-              content: Text("heeeeej detta är en modal ttyp :) "),
+              content: StepsLeft(
+                  allSteps: allSteps,
+                  currentStep: currentStep,
+                  color: Colors.pink),
               showModal: showModal,
             ),
             TextButton(
@@ -100,4 +123,14 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   Future.delayed(const Duration(seconds: 15), () {
+  //     setState(() {
+  //       showModal = true;
+  //     });
+  //   });
+  // }
 }

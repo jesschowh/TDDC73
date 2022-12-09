@@ -33,19 +33,6 @@ class _StepsLeftState extends State<StepsLeft> {
             color: const Color.fromARGB(255, 209, 222, 245),
             child: Column(
               children: [
-                Container(
-                  color: Colors.grey,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(currentStep.title),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [currentStep.content],
