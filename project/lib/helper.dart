@@ -9,84 +9,65 @@ class StepClass {
   StepClass({required this.title, required this.label, required this.content});
 }
 
-class OverlayContainer extends StatefulWidget {
-  const OverlayContainer({super.key, required this.content});
-
-  final Widget content;
-
-  @override
-  State<OverlayContainer> createState() => _OverlayContainerState();
+// Creates circles based on the current step
+Container circle(int index, int currentStep, Color color) {
+  const Color left = Color.fromARGB(255, 253, 253, 253);
+  return Container(
+    width: 28,
+    height: 28,
+    decoration: BoxDecoration(
+      color: index <= currentStep ? color : left,
+      shape: BoxShape.circle,
+      border: Border.all(color: color),
+    ),
+    child: index < currentStep
+        ? const Icon(
+            color: Colors.white,
+            Icons.done,
+          )
+        : Container(),
+  );
 }
 
-class _OverlayContainerState extends State<OverlayContainer> {
-  late OverlayEntry overlayEntry;
+// Builds the "steps left" part with circles and label
+class StepItem extends StatelessWidget {
+  const StepItem(
+      {super.key,
+      required this.index,
+      required this.length,
+      required this.currentStep,
+      required this.label,
+      required this.color});
 
-  void showOverlay() {
-    overlayEntry = OverlayEntry(builder: (BuildContext context) {
-      return ContainerContent(
-          content: widget.content, closeWindow: hideOverlay);
-    });
-    Overlay.of(context)?.insert(overlayEntry);
-  }
-
-  void hideOverlay() {
-    overlayEntry.remove();
-  }
+  final int index;
+  final int length;
+  final int currentStep;
+  final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 70,
-      height: 50,
-      child: TextButton(
-        style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(
-              const Color.fromARGB(255, 2, 2, 2)),
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-        ),
-        onPressed: showOverlay,
-        child: const Text('Click me'),
-      ),
-    );
-  }
-}
-
-class ContainerContent extends StatelessWidget {
-  const ContainerContent(
-      {super.key, required this.content, required this.closeWindow});
-  final Widget content;
-  final Function closeWindow;
-
-  @override
-  Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      child: Container(
-        color: const Color.fromARGB(150, 0, 0, 0),
-        child: FractionallySizedBox(
-          widthFactor: 0.8,
-          heightFactor: 0.7,
-          child: Center(
-            child: Container(
-              color: Colors.blue.shade50,
-              child: Column(
-                children: [
-                  content,
-                  TextButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                          const Color.fromARGB(255, 2, 2, 2)),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue),
+    return Column(
+      children: [
+        Row(
+          children: [
+            circle(index, currentStep, color),
+            index < length - 1
+                ? Container(
+                    height: 3,
+                    decoration: BoxDecoration(
+                      color: color,
                     ),
-                    onPressed: () => closeWindow(),
-                    child: const Text('Close window'),
-                  ),
-                ],
-              ),
-            ),
-          ),
+                  )
+                : Container(),
+          ],
         ),
-      ),
+        const SizedBox(height: 5),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12),
+        ),
+      ],
     );
   }
 }
