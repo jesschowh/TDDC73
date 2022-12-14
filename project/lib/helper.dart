@@ -71,6 +71,7 @@ class StepItem extends StatelessWidget {
 Text setText(String input) {
   return Text(
     input,
+    textAlign: TextAlign.center,
     style: const TextStyle(
         decoration: TextDecoration.none,
         color: Colors.black,

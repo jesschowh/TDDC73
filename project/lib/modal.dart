@@ -39,12 +39,13 @@ class _ModalState extends State<Modal> {
             child: Container(
               // "Smokes" out the background
               color: const Color.fromARGB(150, 0, 0, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: hideOverlay,
@@ -58,12 +59,12 @@ class _ModalState extends State<Modal> {
                           Icons.close,
                           size: 20,
                         ),
-                      )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15.0, 4.0, 15.0, 0),
+                        child: widget.content,
+                      ),
                     ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 4.0, 15.0, 0),
-                    child: widget.content,
                   ),
                 ],
               ),
