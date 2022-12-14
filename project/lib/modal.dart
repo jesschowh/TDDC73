@@ -34,37 +34,38 @@ class _ModalState extends State<Modal> {
       builder: (BuildContext context) {
         return FractionallySizedBox(
           // Covers the whole screen
-          child: Container(
-            // "Smokes" out the background
-            color: const Color.fromARGB(150, 0, 0, 0),
-            child: FractionallySizedBox(
-              // Sets size of the modal
-              widthFactor: 0.8,
-              heightFactor: 0.7,
-              child: Center(
-                child: Container(
-                  // Sets color of the modal
-                  color: Colors.blue.shade50,
-                  child: Column(
+          child: GestureDetector(
+            onTap: () => hideOverlay(),
+            child: Container(
+              // "Smokes" out the background
+              color: const Color.fromARGB(150, 0, 0, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromARGB(255, 2, 2, 2)),
+                      ElevatedButton(
+                        onPressed: hideOverlay,
+                        style: ElevatedButton.styleFrom(
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          shape: const CircleBorder(),
                           backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.blue),
+                              const Color.fromARGB(154, 255, 255, 255),
                         ),
-                        onPressed: () => hideOverlay(),
-                        child: setText('x'),
-                      ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.8),
-                        child: widget.content,
-                      ),
+                        child: const Icon(
+                          Icons.close,
+                          size: 20,
+                        ),
+                      )
                     ],
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15.0, 4.0, 15.0, 0),
+                    child: widget.content,
+                  ),
+                ],
               ),
             ),
           ),
@@ -80,7 +81,6 @@ class _ModalState extends State<Modal> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.showModal ? showOverlay() : () {};
     });
-    print('time delay ${widget.timeDelay}, showModal ${widget.showModal}');
     return Container();
   }
 

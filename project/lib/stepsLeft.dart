@@ -65,28 +65,28 @@ class _StepsLeftState extends State<StepsLeft> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 10, 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromARGB(255, 2, 2, 2)),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(widget.color),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            widget.showWidget = false;
-                          });
-                        },
-                        child: const Text('Continue'),
-                      ),
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(0, 20, 10, 10),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       TextButton(
+                //         style: ButtonStyle(
+                //           foregroundColor: MaterialStateProperty.all<Color>(
+                //               const Color.fromARGB(255, 2, 2, 2)),
+                //           backgroundColor:
+                //               MaterialStateProperty.all<Color>(widget.color),
+                //         ),
+                //         onPressed: () {
+                //           setState(() {
+                //             widget.showWidget = false;
+                //           });
+                //         },
+                //         child: const Text('Continue'),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           )

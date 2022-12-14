@@ -35,48 +35,82 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    StepClass stepTest = StepClass(
-      label: 'label1',
-      content: Column(
-        children: [
-          // Container(
-          //   color: Colors.grey,
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(5.0),
-          //     child: Row(
-          //       children: <Widget>[
-          //         Expanded(
-          //           child: setTitleText("title1"),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          SizedBox(
-            width: 200,
-            height: 200,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                setText('text11'),
-                setText('text12'),
-              ],
+    List<StepClass> allSteps = <StepClass>[
+      StepClass(
+        label: 'Lab 1',
+        content: Column(
+          children: [
+            SizedBox(
+              width: 200,
+              height: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  setText(
+                      'Recreate the layout from the example in three frameworks: Android Studio, React Native, and Flutter'),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    );
-    StepClass stepTest2 = StepClass(
-        label: 'label2',
-        content: Row(children: [
-          setText('hello this iiiis a text :))))) '),
-          setText('text22')
-        ]));
-    StepClass stepTest3 = StepClass(
-        label: 'label3',
-        content: Row(children: [setText('text31'), setText('text32')]));
-
-    List<StepClass> allSteps = <StepClass>[stepTest, stepTest2, stepTest3];
+      StepClass(
+        label: 'Lab 2',
+        content: Column(
+          children: [
+            SizedBox(
+              width: 200,
+              height: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Image(image: AssetImage('images/5.jpeg')),
+                  setText(
+                      'Recreate the credit card layout and interaction functionality for Android'),
+                  setText('Framework: Flutter'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      StepClass(
+        label: 'Lab 3',
+        content: Column(
+          children: [
+            SizedBox(
+              width: 200,
+              height: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  setText('Create an app that communicates with Github'),
+                  setText('Framework: Flutter, API: GraphQL'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      StepClass(
+        label: 'Project',
+        content: Column(
+          children: [
+            SizedBox(
+              width: 200,
+              height: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  setText('Create mini SDK of interaction patterns'),
+                  setText('Framework: Flutter, API: GraphQL'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ];
     List<StepClass> allStepsEMPTY = <StepClass>[];
 
     // bool getBool() {
@@ -112,7 +146,8 @@ class _HomeState extends State<Home> {
               ),
               onPressed: () {
                 setState(() {
-                  // currentStep = currentStep + 1;
+                  currentStep = currentStep + 1;
+                  if (currentStep > allSteps.length) currentStep = 0;
                   showModal = true;
                 });
               },
