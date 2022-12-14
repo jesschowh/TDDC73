@@ -12,7 +12,6 @@ class StepsLeft extends StatefulWidget {
 
   final List<StepClass> allSteps;
   final Color color;
-
   final int currentStep;
 
   @override
@@ -52,6 +51,7 @@ class _StepsLeftState extends State<StepsLeft> {
                       children: [
                         for (int i = 0; i < widget.allSteps.length; ++i)
                           StepItem(
+                            // create the circle and label item
                             index: i,
                             currentStep: widget.currentStep,
                             label: widget.allSteps[i].label,

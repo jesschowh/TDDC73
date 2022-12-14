@@ -162,7 +162,23 @@ class _HomeState extends State<Home> {
                 width: 200,
                 height: 200,
                 color: Colors.indigo,
-                child: setText("Modal"),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    setTitleText("Modal"),
+                    Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        image: const DecorationImage(
+                            image: NetworkImage(
+                                "https://petapixel.com/assets/uploads/2022/07/DALLEcopy.jpg"),
+                            fit: BoxFit.cover),
+                      ),
+                    )
+                  ],
+                ),
               ),
               showModal: showEmptyModal,
             ),

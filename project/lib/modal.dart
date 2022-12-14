@@ -77,6 +77,7 @@ class _ModalState extends State<Modal> {
   }
 
   // builds empty container at launch
+  // check after each build if overlay should be displayed
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -85,17 +86,20 @@ class _ModalState extends State<Modal> {
     return Container();
   }
 
+  // delay 5 seconds before showing the modal
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.timeDelay
-          ? Future.delayed(const Duration(seconds: 5), () {
-              setState(() {
-                widget.showModal = true;
-              });
-            })
-          : () {};
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        widget.timeDelay
+            ? Future.delayed(const Duration(seconds: 5), () {
+                setState(() {
+                  widget.showModal = true;
+                });
+              })
+            : () {}; // do nothing
+      },
+    );
   }
 }
