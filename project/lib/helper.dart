@@ -33,13 +33,11 @@ class StepItem extends StatelessWidget {
   const StepItem(
       {super.key,
       required this.index,
-      required this.length,
       required this.currentStep,
       required this.label,
       required this.color});
 
   final int index;
-  final int length;
   final int currentStep;
   final String label;
   final Color color;
@@ -48,19 +46,7 @@ class StepItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            circle(index, currentStep, color),
-            index < length - 1
-                ? Container(
-                    height: 3,
-                    decoration: BoxDecoration(
-                      color: color,
-                    ),
-                  )
-                : Container(),
-          ],
-        ),
+        circle(index, currentStep, color),
         const SizedBox(height: 5),
         setText(label),
       ],
